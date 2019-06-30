@@ -25,11 +25,11 @@ import mwgrinpool
 def __updateNicehashOrders():
     nicehash.updateOrders()
 
-def __withdrawFromPool():
+def __withdrawFromPool(config):
     payout = mwgrinpool.Pool_Payout()
-    payout.username = MWGRINPOOL_USER
-    payout.password = MWGRINPOOL_PASS
-    payout.wallet_pass = WALLET_PASSWORD
+    payout.username = config['USERNAME']
+    payout.password = config['PASSWORD']
+    payout.wallet_pass = config['PASSWORD']
     payout.run_local_wallet()
 
 
@@ -37,9 +37,6 @@ if __name__ == "__main__":
     ## Load user config
     config = toml.load("config.toml")
     LOOP_DELAY_MINUTES = 60 * config['hashmanager']['LOOP_DELAY_MINUTES']
-    MWGRINPOOL_USER = config['mwgrinpool']['USERNAME']
-    MWGRINPOOL_PASS = config['mwgrinpool']['PASSWORD']
-    WALLET_PASSWORD = config['wallet']['PASSWORD']
 
     ## Print banner
     print("################################################################################")
@@ -61,7 +58,7 @@ if __name__ == "__main__":
 
         ## Withdraw from mining pool
         try:
-            __withdrawFromPool()
+            __withdrawFromPool(config['mwgrinpool'])
         except Exception as e:
             print("Error: {}".format(str(e)))
 
