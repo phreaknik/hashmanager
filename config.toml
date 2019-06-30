@@ -1,5 +1,8 @@
 title = "Nicehashbot Config"
 
+[hashmanager]
+LOOP_DELAY_MINUTES = 10
+
 [nicehash]
 API_ID = ""
 API_KEY = ""

@@ -13,6 +13,44 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+import os
+import sys
+import time
+import toml
 import nicehash
 
-nicehash.updateOrders()
+## Load user config
+config = toml.load("config.toml")
+LOOP_DELAY_MINUTES = 60 * config['hashmanager']['LOOP_DELAY_MINUTES']
+
+## Print banner
+print("################################################################################")
+print("##                                Hash Manager                                ##")
+print("################################################################################")
+
+
+try:
+    while(1):
+        ## Open new Nicehash orders
+        # Any BTC funds sitting in Nicehash should be committed to hash orders.
+
+        ## Update existing Nicehash orders
+        # Existing orders should be updated to track lowest possible price
+        print("Updating existing Nicehash orders...")
+        nicehash.updateOrders()
+
+        ## Withdraw GRIN from mining pool
+
+        ## Deposit GRIN to exchange
+
+        ## Exchange funds for BTC
+
+        ## Withdraw BTC to Nicehash
+
+        ## Sleep
+        time.sleep(LOOP_DELAY_MINUTES)
+
+## Handle loop errors
+except Exception as e:
+    print("Error: {}".format(str(e)))

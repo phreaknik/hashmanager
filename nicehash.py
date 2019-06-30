@@ -34,16 +34,13 @@ PRICE_ADJUST_RATE = config['nicehash']['PRICE_ADJUST_RATE']
 
 if PRICE_ADJUST_RATE == "slow":
     MAX_INCREASE = 0.0001   # Maximum amount to increase at once
-    TARGET_MIN_ADD = 0.0000 # Amount to set order price over the absolute minimum 
-    LOOP_INTERVAL = 120     # Sleep this long between control loop runs
+    TARGET_MIN_ADD = 0.0000 # Amount to set order price over the absolute minimum
 elif PRICE_ADJUST_RATE == "medium":
     MAX_INCREASE = 0.0002   # Maximum amount to increase at once
-    TARGET_MIN_ADD = 0.0001 # Amount to set order price over the absolute minimum 
-    LOOP_INTERVAL = 60      # Sleep this long between control loop runs
+    TARGET_MIN_ADD = 0.0001 # Amount to set order price over the absolute minimum
 elif PRICE_ADJUST_RATE == "fast":
     MAX_INCREASE = 0.0005   # Maximum amount to increase at once
-    TARGET_MIN_ADD = 0.0001 # Amount to set order price over the absolute minimum 
-    LOOP_INTERVAL = 15      # Sleep this long between control loop runs
+    TARGET_MIN_ADD = 0.0001 # Amount to set order price over the absolute minimum
 else:
     print("Error:  Missing config for nicehash PRICE_ADJUST_RATE")
     print("  Make sure PRICE_ADJUST_RATE is set to either \"slow\", \"medium\", or \"fast\" in config.toml")
@@ -115,16 +112,12 @@ def updateOrders():
                 "location": location,
                 "algo": algo,
                 }
-            try:
-                result = __callNicehashApi("orders.get&my", getMyOrders_args)
-                for order in result["orders"]:
-                    order_id = order["id"]
-                    current_orders[order_id] = order
-                    current_orders[order_id]["algo"] = int(algo)
-                    current_orders[order_id]["location"] = int(location)
-            except Exception as e:
-                print("Error: {}".format(str(e)))
-                print(traceback.print_exc())
+            result = __callNicehashApi("orders.get&my", getMyOrders_args)
+            for order in result["orders"]:
+                order_id = order["id"]
+                current_orders[order_id] = order
+                current_orders[order_id]["algo"] = int(algo)
+                current_orders[order_id]["location"] = int(location)
 
     # Update the orders we are tracking
     # Remove orders that no longer exist
