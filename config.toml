@@ -7,3 +7,10 @@ LOOP_DELAY_MINUTES = 10
 API_ID = ""
 API_KEY = ""
 PRICE_ADJUST_RATE = "fast"
+
+[mwgrinpool]
+USERNAME = ""
+PASSWORD = ""
+
+[wallet]
+PASSWORD = ""

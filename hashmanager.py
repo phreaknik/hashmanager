@@ -19,28 +19,51 @@ import sys
 import time
 import toml
 import nicehash
-
-## Load user config
-config = toml.load("config.toml")
-LOOP_DELAY_MINUTES = 60 * config['hashmanager']['LOOP_DELAY_MINUTES']
-
-## Print banner
-print("################################################################################")
-print("##                                Hash Manager                                ##")
-print("################################################################################")
+import mwgrinpool
 
 
-try:
+def __updateNicehashOrders():
+    nicehash.updateOrders()
+
+def __withdrawFromPool():
+    payout = mwgrinpool.Pool_Payout()
+    payout.username = MWGRINPOOL_USER
+    payout.password = MWGRINPOOL_PASS
+    payout.wallet_pass = WALLET_PASSWORD
+    payout.run_local_wallet()
+
+
+if __name__ == "__main__":
+    ## Load user config
+    config = toml.load("config.toml")
+    LOOP_DELAY_MINUTES = 60 * config['hashmanager']['LOOP_DELAY_MINUTES']
+    MWGRINPOOL_USER = config['mwgrinpool']['USERNAME']
+    MWGRINPOOL_PASS = config['mwgrinpool']['PASSWORD']
+    WALLET_PASSWORD = config['wallet']['PASSWORD']
+
+    ## Print banner
+    print("################################################################################")
+    print("##                                Hash Manager                                ##")
+    print("################################################################################")
+
+
     while(1):
         ## Open new Nicehash orders
         # Any BTC funds sitting in Nicehash should be committed to hash orders.
 
         ## Update existing Nicehash orders
         # Existing orders should be updated to track lowest possible price
-        print("Updating existing Nicehash orders...")
-        nicehash.updateOrders()
+        try:
+            print("Updating existing Nicehash orders...")
+            __updateNicehashOrders()
+        except Exception as e:
+            print("Error: {}".format(str(e)))
 
-        ## Withdraw GRIN from mining pool
+        ## Withdraw from mining pool
+        try:
+            __withdrawFromPool()
+        except Exception as e:
+            print("Error: {}".format(str(e)))
 
         ## Deposit GRIN to exchange
 
@@ -50,7 +73,3 @@ try:
 
         ## Sleep
         time.sleep(LOOP_DELAY_MINUTES)
-
-## Handle loop errors
-except Exception as e:
-    print("Error: {}".format(str(e)))
