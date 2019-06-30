@@ -1,0 +1,6 @@
+title = "Nicehashbot Config"
+
+[nicehash]
+API_ID = ""
+API_KEY = ""
+PRICE_ADJUST_RATE = "fast"
